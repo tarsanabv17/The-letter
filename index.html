@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A letter for you</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--dusk:#2b2140;--plum:#4a3563;--blush:#f6b8c8;--rose:#e88aa6;--glow:#ffd9a8;--paper:#fff9f2;--ink:#5a3e4b;--hand:'Caveat','Segoe Script','Bradley Hand',cursive}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{min-height:100vh;background:radial-gradient(ellipse at 50% 0%,var(--plum),var(--dusk) 70%) fixed;color:var(--paper);font-family:'Nunito',system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
+
+/* floating hearts & stars */
+#sky{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+#sky span{position:absolute;bottom:-40px;opacity:0;animation:floatUp linear forwards}
+@keyframes floatUp{10%{opacity:.85}100%{transform:translate(30px,-115vh) rotate(40deg);opacity:0}}
+
+/* music button */
+#music{position:fixed;top:14px;right:14px;z-index:10;width:46px;height:46px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(255,255,255,.14);color:#fff;font-size:20px;cursor:pointer;backdrop-filter:blur(6px)}
+
+/* hero: envelope -> letter */
+.hero{position:relative;z-index:1;min-height:100svh;display:grid;place-items:center;padding:14vh 16px 8vh}
+.hero>*{grid-area:1/1}
+.env-wrap{transition:opacity .8s,transform .8s,visibility 0s}
+.read .env-wrap{opacity:0;transform:translateY(50px) scale(.92);visibility:hidden;transition:opacity .8s,transform .8s,visibility 0s .8s}
+.envelope{position:relative;width:min(340px,82vw);aspect-ratio:3/2;margin:0 auto;cursor:pointer;perspective:900px;filter:drop-shadow(0 18px 24px rgba(0,0,0,.35));animation:bob 3s ease-in-out infinite}
+.envelope.open{animation:none;cursor:default}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.env-back{position:absolute;inset:0;background:#e395ae;border-radius:8px}
+.letter{position:absolute;left:7%;top:6%;width:86%;height:90%;z-index:2;background:var(--paper);border-radius:6px;display:flex;justify-content:center;padding-top:12px;font:700 28px var(--hand);color:var(--rose);transition:transform 1s cubic-bezier(.3,.8,.3,1) .7s}
+.open .letter{transform:translateY(-64%)}
+.pocket{position:absolute;inset:0;z-index:3;border-radius:8px;background:linear-gradient(135deg,#f8c2d1,#efa0b8);clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%)}
+.flap{position:absolute;left:0;top:0;width:100%;height:55%;z-index:4;border-radius:8px 8px 0 0;background:linear-gradient(#f3a7bd,#e58aa6);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .8s ease,z-index 0s .4s}
+.open .flap{transform:rotateX(180deg);z-index:1}
+.seal{position:absolute;left:50%;top:55%;width:44px;height:44px;margin:-22px 0 0 -22px;z-index:5;border-radius:50%;display:grid;place-items:center;background:#d9577d;color:#fff;font-size:20px;box-shadow:0 3px 6px rgba(0,0,0,.25);transition:opacity .3s,transform .3s}
+.open .seal{opacity:0;transform:scale(.3)}
+.hint{text-align:center;margin-top:30px;font:500 26px var(--hand);color:var(--glow);animation:pulse 2s ease-in-out infinite;transition:opacity .4s}
+.envelope.open+.hint{opacity:0;animation:none}
+@keyframes pulse{50%{opacity:.5}}
+
+/* the letter itself: put your message in the HTML below */
+.paper{width:min(560px,100%);padding:32px 34px;color:var(--ink);background:var(--paper) repeating-linear-gradient(transparent 0 31px,#f5dce3 31px 32px);border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.4);opacity:0;visibility:hidden;transform:translateY(60px) scale(.9) rotate(-1.5deg);transition:opacity .9s .3s,transform .9s cubic-bezier(.2,.8,.3,1) .3s,visibility 0s .3s}
+.read .paper{opacity:1;visibility:visible;transform:rotate(-.6deg)}
+.paper h1{font:700 46px/64px var(--hand);color:var(--rose)}
+.paper p{font-size:18px;line-height:32px;margin-bottom:32px}
+.paper .sign{font:700 30px/32px var(--hand);color:var(--rose);text-align:right;margin:0}
+.read .paper>*{animation:rise .8s both;animation-delay:calc(1s + .35s*var(--i))}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+
+/* below the letter */
+.after{display:none;position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 18px 90px}
+.read .after{display:block;animation:rise 1.2s 2.6s both}
+.after h2{font:700 42px var(--hand);color:var(--glow);text-align:center;margin:56px 0 24px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:24px}
+.polaroid{background:#fff;padding:10px 10px 4px;border-radius:3px;box-shadow:0 10px 24px rgba(0,0,0,.35);transform:rotate(var(--r));transition:transform .3s}
+.polaroid:hover{transform:rotate(0) scale(1.05)}
+.ph{position:relative;aspect-ratio:1;overflow:hidden;display:grid;place-items:center;font-size:36px;background:linear-gradient(135deg,#ffd9e2,#e5d4ff)}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.polaroid figcaption{font:700 22px var(--hand);color:var(--ink);text-align:center;padding:6px 0}
+.when{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.when button{cursor:pointer;border:0;border-radius:10px;padding:22px 16px;font:700 27px var(--hand);color:#5a2a3c;background:linear-gradient(160deg,#f8c2d1,#eaa0b8);box-shadow:0 8px 18px rgba(0,0,0,.3);transition:transform .2s}
+.when button:hover,.when button:focus-visible{transform:translateY(-4px) rotate(-1deg)}
+
+/* open-when popup */
+#modal{position:fixed;inset:0;z-index:20;display:none;place-items:center;padding:20px;background:rgba(20,12,30,.72)}
+#modal.show{display:grid}
+.note{width:100%;max-width:420px;padding:30px 28px;border-radius:12px;color:var(--ink);background:var(--paper);box-shadow:0 20px 50px rgba(0,0,0,.5);animation:pop .4s cubic-bezier(.3,1.4,.5,1)}
+.note h3{font:700 34px var(--hand);color:var(--rose);margin-bottom:6px}
+.note button{margin-top:18px;padding:8px 20px;border:0;border-radius:20px;cursor:pointer;font:600 15px 'Nunito',sans-serif;color:#5a2a3c;background:var(--blush)}
+@keyframes pop{from{transform:scale(.7) translateY(30px);opacity:0}}
+
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important;transition-delay:0s!important}}
+</style>
+</head>
+<body>
+<div id="sky" aria-hidden="true"></div>
+
+<!-- Add your song as music.mp3 next to this file (or change the src). No file = no music button. -->
+<audio id="bgm" src="music.mp3" loop preload="auto"></audio>
+<button id="music" hidden aria-label="Toggle music">🎵</button>
+
+<header class="hero">
+  <div class="env-wrap">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the envelope">
+      <div class="env-back"></div>
+      <div class="letter">for you ♡</div>
+      <div class="pocket"></div>
+      <div class="flap"></div>
+      <div class="seal">❤</div>
+    </div>
+    <p class="hint">tap to open</p>
+  </div>
+
+  <!-- ✏️ YOUR LETTER: change the text. Add or remove <p> lines as you like. -->
+  <article class="paper">
+    <h1>My dearest [Name],</h1>
+    <p>Write your message here. This is where the words only you can say go.</p>
+    <p>Add as many paragraphs as you like. Each one appears softly, one after another.</p>
+    <p>Tell them about the moment you knew, the little things you love, and what you're looking forward to.</p>
+    <p class="sign">Forever yours,<br>[Your name] ♡</p>
+  </article>
+</header>
+
+<main class="after">
+  <h2>Our little moments</h2>
+  <div class="gallery" id="gallery"></div>
+  <h2>Open when...</h2>
+  <div class="when" id="when"></div>
+</main>
+
+<div id="modal" role="dialog" aria-modal="true">
+  <div class="note"><h3 id="noteT"></h3><p id="noteM"></p><button id="close">Close</button></div>
+</div>
+
+<script>
+/* ===== ✏️ EDIT THESE ===== */
+// Put your photos in a "photos" folder next to this file (or change the paths).
+const photos=[
+  {src:'photos/1.jpg',cap:'The day we met'},
+  {src:'photos/2.jpg',cap:'My favourite smile'},
+  {src:'photos/3.jpg',cap:'Our first trip'},
+  {src:'photos/4.jpg',cap:'Cozy nights'},
+  {src:'photos/5.jpg',cap:'Silly us'},
+  {src:'photos/6.jpg',cap:'Still my favourite'}
+];
+const openWhen=[
+  {t:'Open when you miss me',m:'Write your note here.'},
+  {t:"Open when you can't sleep",m:'Write your note here.'},
+  {t:'Open when you feel low',m:'Write your note here.'},
+  {t:'Open when you need a smile',m:'Write your note here.'}
+];
+/* ========================== */
+
+const $=id=>document.getElementById(id);
+const env=$('envelope'),bgm=$('bgm'),mb=$('music'),modal=$('modal');
+
+// floating hearts and stars
+const G=['❤','♡','✦','★','💗'],C=['#f6b8c8','#ffd9a8','#ffffff','#e88aa6'];
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pick=a=>a[Math.random()*a.length|0];
+function spawn(){
+  if(calm||document.hidden)return;
+  const s=document.createElement('span');
+  s.textContent=pick(G);
+  s.style.cssText=`left:${Math.random()*100}vw;font-size:${10+Math.random()*18}px;color:${pick(C)};animation-duration:${9+Math.random()*9}s`;
+  $('sky').append(s);
+  s.onanimationend=()=>s.remove();
+}
+setInterval(spawn,900);
+
+// music
+let musicOk=true;
+bgm.volume=.35;
+bgm.addEventListener('error',()=>{musicOk=false;mb.hidden=true});
+bgm.addEventListener('play',()=>mb.textContent='🎵');
+bgm.addEventListener('pause',()=>mb.textContent='🔇');
+mb.onclick=()=>bgm.paused?bgm.play().catch(()=>{}):bgm.pause();
+
+// envelope
+document.querySelectorAll('.paper>*').forEach((el,i)=>el.style.setProperty('--i',i));
+function openEnv(){
+  if(env.classList.contains('open'))return;
+  env.classList.add('open');
+  bgm.play().catch(()=>{});
+  mb.hidden=!musicOk;
+  for(let i=0;i<16;i++)setTimeout(spawn,i*90);
+  setTimeout(()=>document.body.classList.add('read'),2400);
+}
+env.onclick=openEnv;
+env.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openEnv()}};
+
+// gallery
+const icons=['🌷','🧸','☁️','🍓','🌙','🕯️'];
+$('gallery').innerHTML=photos.map((p,i)=>`<figure class="polaroid" style="--r:${i%2?2:-2}deg"><div class="ph">${icons[i%icons.length]}<img src="${p.src}" alt="${p.cap}" onerror="this.remove()"></div><figcaption>${p.cap}</figcaption></figure>`).join('');
+
+// open-when notes
+openWhen.forEach(n=>{
+  const b=document.createElement('button');
+  b.textContent='💌 '+n.t;
+  b.onclick=()=>{$('noteT').textContent=n.t;$('noteM').textContent=n.m;modal.classList.add('show');$('close').focus()};
+  $('when').append(b);
+});
+const shut=()=>modal.classList.remove('show');
+$('close').onclick=shut;
+modal.onclick=e=>{if(e.target===modal)shut()};
+addEventListener('keydown',e=>{if(e.key==='Escape')shut()});
+</script>
+</body>
+</html>
