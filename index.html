@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A letter for you</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--dusk:#2b2140;--plum:#4a3563;--blush:#f6b8c8;--rose:#e88aa6;--glow:#ffd9a8;--paper:#fff9f2;--ink:#5a3e4b;--hand:'Caveat','Segoe Script','Bradley Hand',cursive}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+body{min-height:100vh;background:radial-gradient(ellipse at 50% 0%,var(--plum),var(--dusk) 70%) fixed;color:var(--paper);font-family:'Nunito',system-ui,sans-serif;line-height:1.6;overflow-x:hidden}
+:focus-visible{outline:3px solid var(--glow);outline-offset:3px}
+
+/* floating hearts & stars */
+#sky{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+#sky span{position:absolute;bottom:-40px;opacity:0;animation:floatUp linear forwards}
+@keyframes floatUp{10%{opacity:.85}100%{transform:translate(30px,-115vh) rotate(40deg);opacity:0}}
+
+/* music button */
+#music{position:fixed;top:14px;right:14px;z-index:10;width:46px;height:46px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(255,255,255,.14);color:#fff;font-size:20px;cursor:pointer;backdrop-filter:blur(6px)}
+
+/* envelope -> letter */
+.hero{position:relative;z-index:1;min-height:100svh;display:grid;place-items:center;padding:14vh 16px 10vh}
+.hero>*{grid-area:1/1}
+.env-wrap{transition:opacity .8s,transform .8s,visibility 0s}
+.read .env-wrap{opacity:0;transform:translateY(50px) scale(.92);visibility:hidden;transition:opacity .8s,transform .8s,visibility 0s .8s}
+.envelope{position:relative;width:min(340px,82vw);aspect-ratio:3/2;margin:0 auto;cursor:pointer;perspective:900px;filter:drop-shadow(0 18px 24px rgba(0,0,0,.35));animation:bob 3s ease-in-out infinite}
+.envelope.open{animation:tap .5s ease;cursor:default}
+@keyframes tap{40%{transform:scale(1.07) rotate(-2deg)}}
+.env-wrap{position:relative}
+.env-wrap::before{content:"";position:absolute;left:50%;top:38%;z-index:-1;width:150%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,217,168,.55),transparent 60%);transform:translate(-50%,-50%);opacity:0;transition:opacity 1s;pointer-events:none}
+.env-wrap.lit::before{opacity:1}
+.pop{position:fixed;z-index:6;pointer-events:none;font-size:18px;animation:fly 1.4s ease-out forwards}
+@keyframes fly{from{transform:translate(-50%,-50%) scale(.4);opacity:1}to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.1) rotate(var(--r));opacity:0}}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.env-back{position:absolute;inset:0;background:#e395ae;border-radius:8px}
+.letter{position:absolute;left:7%;top:6%;width:86%;height:90%;z-index:2;background:var(--paper);border-radius:6px;display:flex;justify-content:center;padding-top:12px;font:700 28px var(--hand);color:var(--rose);transition:transform 1s cubic-bezier(.3,.8,.3,1) .7s}
+.open .letter{transform:translateY(-64%)}
+.pocket{position:absolute;inset:0;z-index:3;border-radius:8px;background:linear-gradient(135deg,#f8c2d1,#efa0b8);clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%)}
+.flap{position:absolute;left:0;top:0;width:100%;height:55%;z-index:4;border-radius:8px 8px 0 0;background:linear-gradient(#f3a7bd,#e58aa6);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .8s ease,z-index 0s .4s}
+.open .flap{transform:rotateX(180deg);z-index:1}
+.seal{position:absolute;left:50%;top:55%;width:44px;height:44px;margin:-22px 0 0 -22px;z-index:5;border-radius:50%;display:grid;place-items:center;background:#d9577d;color:#fff;font-size:20px;box-shadow:0 3px 6px rgba(0,0,0,.25);transition:opacity .3s,transform .3s}
+.open .seal{opacity:0;transform:scale(.3)}
+.hint{text-align:center;margin-top:30px;font:500 26px var(--hand);color:var(--glow);animation:pulse 2s ease-in-out infinite;transition:opacity .4s}
+.envelope.open+.hint{opacity:0;animation:none}
+@keyframes pulse{50%{opacity:.5}}
+
+/* the letter */
+.paper{width:min(560px,100%);padding:32px 34px;color:#5a3e4b;background-color:#fff9f2;background-image:repeating-linear-gradient(to bottom,transparent,transparent 31px,#f5dce3 31px,#f5dce3 32px);border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.4);opacity:0;visibility:hidden;transform:translateY(60px) scale(.9) rotate(-1.5deg);transition:opacity .9s .3s,transform .9s cubic-bezier(.2,.8,.3,1) .3s,visibility 0s .3s}
+.read .paper{opacity:1;visibility:visible;transform:rotate(-.6deg)}
+.paper h1{font:700 46px/64px var(--hand);color:var(--rose)}
+.paper p{font-size:18px;line-height:32px;margin-bottom:32px}
+.paper .sign{font:700 30px/32px var(--hand);color:var(--rose);text-align:right}
+.paper>:last-child{margin-bottom:0}
+.read .paper>*{animation:rise .8s both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important;transition-delay:0s!important}}
+</style>
+</head>
+<body>
+<div id="sky" aria-hidden="true"></div>
+
+<!-- Optional: add your song as music.mp3 next to this file. No file = no music button. -->
+<audio id="bgm" src="music.mp3" loop preload="auto"></audio>
+<button id="music" hidden aria-label="Toggle music">🎵</button>
+
+<header class="hero">
+  <div class="env-wrap">
+    <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the envelope">
+      <div class="env-back"></div>
+      <div class="letter">for Byba ♡</div>
+      <div class="pocket"></div>
+      <div class="flap"></div>
+      <div class="seal">❤</div>
+    </div>
+    <p class="hint">tap to open</p>
+  </div>
+
+  <article class="paper">
+    <h1>My dearest Byba,</h1>
+    <p>you my little trouble, came in like an electric flash into my life, and swept me off my foot with your googly cute eyes.</p>
+    <p>I was listening to a new song today, in the metro, and YOU are everything I was reminded of! </p>
+    <p>I just wanted to say, with all my heart, I'll always be soo soo proud of the man YOU are!</p>
+    <p>And, I just wanted to give you a big big bigggggggggg hug ma love!</p>
+    <p class="sign">Forever yours,<br>Tara♡</p>
+    <p>PS: I love you MORE</p>
+  </article>
+</header>
+
+<script>
+const $=id=>document.getElementById(id);
+const env=$('envelope'),bgm=$('bgm'),mb=$('music');
+
+// floating hearts and stars
+const G=['❤','♡','✦','★','💗'],C=['#f6b8c8','#ffd9a8','#ffffff','#e88aa6'];
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pick=a=>a[Math.random()*a.length|0];
+function spawn(){
+  if(calm||document.hidden)return;
+  const s=document.createElement('span');
+  s.textContent=pick(G);
+  s.style.cssText=`left:${Math.random()*100}vw;font-size:${10+Math.random()*18}px;color:${pick(C)};animation-duration:${9+Math.random()*9}s`;
+  $('sky').append(s);
+  s.onanimationend=()=>s.remove();
+}
+setInterval(spawn,900);
+
+// music
+let musicOk=true;
+bgm.volume=.35;
+bgm.addEventListener('error',()=>{musicOk=false;mb.hidden=true});
+bgm.addEventListener('play',()=>mb.textContent='🎵');
+bgm.addEventListener('pause',()=>mb.textContent='🔇');
+mb.onclick=()=>bgm.paused?bgm.play().catch(()=>{}):bgm.pause();
+
+// little burst of sparkles when the envelope opens
+function burst(){
+  if(calm)return;
+  const r=env.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height*.35;
+  for(let i=0;i<18;i++){
+    const s=document.createElement('span'),a=Math.PI*2*i/18+Math.random()*.3,d=90+Math.random()*110;
+    s.className='pop';
+    s.textContent=pick(['❤','✦','♡','★']);
+    s.style.cssText=`left:${x}px;top:${y}px;color:${pick(C)};--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d-30}px;--r:${(Math.random()-.5)*120}deg`;
+    document.body.append(s);
+    s.onanimationend=()=>s.remove();
+  }
+}
+
+// envelope
+document.querySelectorAll('.paper>*').forEach((el,i)=>el.style.animationDelay=(1+.35*i)+'s');
+function openEnv(){
+  if(env.classList.contains('open'))return;
+  env.classList.add('open');
+  env.parentElement.classList.add('lit');
+  setTimeout(burst,600);
+  bgm.play().catch(()=>{});
+  mb.hidden=!musicOk;
+  for(let i=0;i<16;i++)setTimeout(spawn,i*90);
+  setTimeout(()=>document.body.classList.add('read'),2400);
+}
+env.onclick=openEnv;
+env.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openEnv()}};
+</script>
+</body>
+</html>
